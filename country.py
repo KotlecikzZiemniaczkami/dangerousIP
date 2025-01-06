@@ -29,7 +29,7 @@ class CountryParser:
         ip = match[0]
         if ('Django Log' in message) and ip:
             reader = geoip2.database.Reader(
-                "C:\\Users\\ddebi\\Desktop\\GeoLite2-Country.mmdb")  ####### this is the place to put your database path
+                "/home/ubuntumil/Downloads/GeoLite2-Country.mmdb")  ####### this is the place to put your database path
             try:
                 try:
                     response = reader.country(ip)
