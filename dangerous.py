@@ -8,7 +8,7 @@ from psycopg2 import sql
 class DangerParser:
     def __init__(self):
         try:
-            with open('credentials.txt', 'r') as cred:
+            with open('/home/ubuntumil/parsers/credentials.txt', 'r') as cred:
                 posw = [line.strip() for line in cred.readlines()]
                 self.connection = psycopg2.connect(
                     dbname=posw[0],
@@ -23,7 +23,7 @@ class DangerParser:
             print('error during conncting')
 
     def parse(self, log):
-        message = log.get('MESSAGE', '')
+        message = log.get('message', '')
         pattern = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
         match = pattern.search(message)
         ip = match[0]

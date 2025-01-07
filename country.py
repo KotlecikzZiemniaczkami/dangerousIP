@@ -9,7 +9,7 @@ class CountryParser:
     def __init__(self):
         self.banned_countries = ['Russia']
         try:
-            with open('credentials.txt', 'r') as cred:
+            with open('/home/ubuntumil/parsers/credentials.txt', 'r') as cred:
                 posw = [line.strip() for line in cred.readlines()]
                 self.connection = psycopg2.connect(
                     dbname=posw[0],
@@ -19,11 +19,11 @@ class CountryParser:
                     port=posw[4]
                 )
             self.cursor = self.connection.cursor()
-        except Exception:
-            print('error during conncting')
+        except Exception as e:
+            print('error during conncting:' + e)
 
     def parse(self, log):
-        message = log.get('MESSAGE', '')
+        message = log.get('message', '')
         pattern = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
         match = pattern.search(message)
         ip = match[0]

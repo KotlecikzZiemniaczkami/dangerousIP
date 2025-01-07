@@ -7,7 +7,7 @@ from psycopg2 import sql
 class DataAndTimeParser:
     def __init__(self):
         try:
-            with open('credentials.txt', 'r') as cred:
+            with open('/home/ubuntumil/parsers/credentials.txt', 'r') as cred:
                 posw = [line.strip() for line in cred.readlines()]
                 self.connection = psycopg2.connect(
                     dbname=posw[0],
@@ -21,7 +21,7 @@ class DataAndTimeParser:
             print('error during conncting')
 
     def parse(self, log):
-        message = log.get('MESSAGE', '')
+        message = log.get('message', '')
         pattern = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
         match = pattern.search(message)
         ip = match[0]
@@ -32,22 +32,22 @@ class DataAndTimeParser:
                     VALUES (%s, %s);
                 """)
 
-                self.cursor.execute(query, (ip, log.get('DATE', '')))
+                self.cursor.execute(query, (ip, log.get('timestamp', '')))
                 self.connection.commit()
 
                 query = sql.SQL("""
                                     SELECT COUNT(*) AS connection_count
                                     FROM ip_time
-                                    WHERE date >= NOW() - INTERVAL '10 seconds' AND ip_addr = %s;
+                                    WHERE time >= NOW() - INTERVAL '10 seconds' AND ip_addr = %s;
                                 """)
 
                 self.cursor.execute(query, (ip,))
                 self.connection.commit()
                 result = self.cursor.fetchone()
 
-                if result[0] > 5:
+                if int(result[0]) > 5:
                     query = sql.SQL("""
-                                        INSERT INTO potential (ip_addr, time)
+                                        INSERT INTO potential (ip_addr, reason)
                                         VALUES (%s, %s);
                                     """)
 
