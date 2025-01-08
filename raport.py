@@ -19,13 +19,13 @@ class Raport:
 
     def generate_me_raport(self):
         try:
-            query = sql.SQL("""
+            query = """
                 SELECT DISTINCT * FROM potential;
-            """)
+            """
 
             data = pd.read_sql_query(query, self.connection)
 
-            print("INCIDENTS".center(20,'*'))
+            print("INCIDENTS".center(40,'*'))
             print(data)
 
 
