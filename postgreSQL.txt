@@ -1,0 +1,29 @@
+CREATE DATABASE Threads
+\c Threads
+
+CREATE TABLE potential (
+ip_addr INET NOT NULL,
+reason VARCHAR(255)
+);
+
+CREATE TABLE ip_country (
+ip_addr INET PRIMARY KEY,
+country VARCHAR(255)
+);
+
+CREATE TABLE ip_time (
+ip_addr INET NOT NULL,
+time timestamp NOT NULL
+);
+
+ALTER TABLE ip_time
+ADD CONSTRAINT fk_ip
+FOREIGN KEY (ip_addr)
+REFERENCES ip_country (ip_addr)
+ON DELETE CASCADE;
+
+ALTER TABLE potential
+ADD CONSTRAINT fk_ip
+FOREIGN KEY (ip_addr)
+REFERENCES ip_country (ip_addr)
+ON DELETE CASCADE;
